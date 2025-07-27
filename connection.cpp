@@ -30,7 +30,7 @@ std::string connection::send(std::string data){
 
 int connection::sendMessage(){
         
-    /*(!)*/std::string writeBuffer, message; 
+    std::string writeBuffer, message; 
     json jsonMessage;
 
     std::cout << "напишите сообщение:" << std::endl;
@@ -42,7 +42,7 @@ int connection::sendMessage(){
 
     message = jsonMessage.dump(-1);
 
-    /*(!)*/ std::cout << "подключение..." << std::endl;
+    std::cout << "подключение..." << std::endl;
 
     try{
         std::string result = send(message);
@@ -52,10 +52,10 @@ int connection::sendMessage(){
         std::cout << reply["code"] << std::endl;
 
     } catch (boost::system::system_error& e){
-        /*(!)*/std::cout << "ошибка подключения " << error.message() << std::endl;
+        std::cout << "ошибка подключения " << error.message() << std::endl;
         return 1;
     } catch(std::exception &e){
-        /*(!)*/std::cout << "ошибка " << e.what() << std::endl;
+        std::cout << "ошибка " << e.what() << std::endl;
         return 1;
     }
 
@@ -64,7 +64,7 @@ int connection::sendMessage(){
 
 int connection::get(){
 
-    /*(!)*/std::string message; 
+    std::string message; 
     json jsonMessage;
 
     jsonMessage["code"] = 1002;
@@ -77,16 +77,16 @@ int connection::get(){
 
         json reply = json::parse(result);
 
-        /*(!)*/ for(const json data : reply){
+        for(const json data : reply){
             std::string message = data["message"]; 
             std::cout << message << std::endl;
         }
 
     } catch (boost::system::system_error& e){
-        /*(!)*/std::cout << "ошибка подключения " << error.message() << std::endl;
+        std::cout << "ошибка подключения " << error.message() << std::endl;
         return 1;
     } catch(std::exception &e){
-        /*(!)*/std::cout << "ошибка " << e.what() << std::endl;
+        std::cout << "ошибка " << e.what() << std::endl;
         return 1;
     }
 
