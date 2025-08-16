@@ -5,10 +5,11 @@ To make the client work, change the IP and port in lines 14-15 (connection.hpp) 
 
 сборка/build
 
-g++ main.cpp connection.cpp -o main -lboost_system
+g++ main.cpp headers/connection.cpp headers/output.cpp -o main -lboost_system -lpanel -lncurses
 
 
 зависимости/dependencies
 
 boost/asio              (boost.org)
 nlohmann-json           (github.com/nlohmann/json)
+ncurses                 (invisible-island.net/ncurses)

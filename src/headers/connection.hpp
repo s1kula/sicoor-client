@@ -1,3 +1,6 @@
+#ifndef CONNECTION_HPP
+#define CONNECTION_HPP
+
 #include <boost/asio.hpp>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -18,6 +21,8 @@ private:
 public:
     connection();
     std::string send(std::string data);
-    int sendMessage();
-    int get();
+    int sendMessage(std::string message);
+    json get();
 };
+
+#endif

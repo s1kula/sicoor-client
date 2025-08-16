@@ -28,41 +28,35 @@ std::string connection::send(std::string data){
     return readBuffer;
 } 
 
-int connection::sendMessage(){
-        
-    std::string writeBuffer, message; 
+int connection::sendMessage(std::string message){
+         
     json jsonMessage;
 
-    std::cout << "напишите сообщение:" << std::endl;
-    std::cin.ignore();
-    std::getline(std::cin, writeBuffer);
-
     jsonMessage["code"] = 1001;
-    jsonMessage["message"] = writeBuffer;
+    jsonMessage["message"] = message;
 
     message = jsonMessage.dump(-1);
 
-    std::cout << "подключение..." << std::endl;
+    //std::cout << "подключение..." << std::endl;
 
     try{
         std::string result = send(message);
 
         json reply = json::parse(result);
 
-        std::cout << reply["code"] << std::endl;
+        //std::cout << reply["code"] << std::endl;
 
     } catch (boost::system::system_error& e){
-        std::cout << "ошибка подключения " << error.message() << std::endl;
+        //std::cout << "ошибка подключения " << error.message() << std::endl;
         return 1;
     } catch(std::exception &e){
-        std::cout << "ошибка " << e.what() << std::endl;
-        return 1;
-    }
+        //std::cout << "ошибка " << e.what() << std::endl;
+        return 1;}
 
     return 0;
 }
 
-int connection::get(){
+json connection::get(){
 
     std::string message; 
     json jsonMessage;
@@ -70,24 +64,23 @@ int connection::get(){
     jsonMessage["code"] = 1002;
     message = jsonMessage.dump(-1);
 
-    std::cout << "подключение..." << std::endl;
+    //std::cout << "подключение..." << std::endl;
 
     try{
         std::string result = send(message);
 
         json reply = json::parse(result);
 
-        for(const json data : reply){
-            std::string message = data["message"]; 
-            std::cout << message << std::endl;
-        }
+        return reply;
 
     } catch (boost::system::system_error& e){
-        std::cout << "ошибка подключения " << error.message() << std::endl;
+        //std::cout << "ошибка подключения " << error.message() << std::endl;
         return 1;
     } catch(std::exception &e){
-        std::cout << "ошибка " << e.what() << std::endl;
+        //std::cout << "ошибка " << e.what() << std::endl;
         return 1;
+    } catch(...){
+        //std::cout << "Произошла неизвестная ошибка" << std::endl;
     }
 
     return 0;
