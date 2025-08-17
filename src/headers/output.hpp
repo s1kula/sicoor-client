@@ -1,5 +1,5 @@
 #ifndef OUTPUT_HPP
-#define COUTPUT_HPP
+#define OUTPUT_HPP
 
 #include <clocale>
 #include "connection.hpp"
