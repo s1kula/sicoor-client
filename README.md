@@ -5,7 +5,7 @@ To make the client work, change the IP and port in lines 14-15 (connection.hpp) 
 
 сборка/build
 
-g++ main.cpp headers/connection.cpp headers/output.cpp -o main -lboost_system -lpanel -lncurses
+g++ src/main.cpp src/headers/connection.cpp src/headers/output.cpp src/headers/headers.cpp -o main -lboost_system -lpanel -lncurses
 
 
 зависимости/dependencies

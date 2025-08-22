@@ -1,4 +1,5 @@
 #include "connection.hpp"
+#include "output.hpp"
 
 connection::connection() : endpoint(serverIp, serverPort){};
     
@@ -8,6 +9,7 @@ std::string connection::send(std::string data){
     socket.connect(endpoint, error);
 
     if(error || !socket.is_open()){
+        outputLink->notificationHide();
         throw error;
     }
 
@@ -28,7 +30,7 @@ std::string connection::send(std::string data){
     return readBuffer;
 } 
 
-int connection::sendMessage(std::string message){
+int8_t connection::sendMessage(std::string message){
          
     json jsonMessage;
 
@@ -37,21 +39,33 @@ int connection::sendMessage(std::string message){
 
     message = jsonMessage.dump(-1);
 
-    //std::cout << "подключение..." << std::endl;
+    outputLink->notification("Подключение...", "", 0);
 
     try{
         std::string result = send(message);
 
+        outputLink->notificationHide();
+
         json reply = json::parse(result);
 
-        //std::cout << reply["code"] << std::endl;
+        if (reply["code"] == 200){
+            outputLink->notification("OK", "code: 200", 1);
+        } else {
+            int16_t code = reply["code"];
+            std::string strCode = "code: " + std::to_string(code);
+            outputLink->error("ERROR", strCode);
+        }
 
     } catch (boost::system::system_error& e){
-        //std::cout << "ошибка подключения " << error.message() << std::endl;
+        outputLink->error("Ошибка подключения", error.message());
         return 1;
     } catch(std::exception &e){
-        //std::cout << "ошибка " << e.what() << std::endl;
-        return 1;}
+        outputLink->error("Ошибка", e.what());
+        return 1;
+    } catch(...){
+        outputLink->error("Произошла неизвестная ошибка", "");
+        return 1;
+    }
 
     return 0;
 }
@@ -64,24 +78,32 @@ json connection::get(){
     jsonMessage["code"] = 1002;
     message = jsonMessage.dump(-1);
 
-    //std::cout << "подключение..." << std::endl;
+    outputLink->notification("Подключение...", "", 0);
 
     try{
         std::string result = send(message);
 
-        json reply = json::parse(result);
+        outputLink->notificationHide();
+
+        json reply;
+        reply["data"] = json::parse(result);
+        reply["success"] = 0;
 
         return reply;
 
     } catch (boost::system::system_error& e){
-        //std::cout << "ошибка подключения " << error.message() << std::endl;
-        return 1;
+        outputLink->error("Ошибка подключения", error.message());
+        return {{"success", 1}};
     } catch(std::exception &e){
-        //std::cout << "ошибка " << e.what() << std::endl;
-        return 1;
+        outputLink->error("Ошибка", e.what());
+        return {{"success", 1}};
     } catch(...){
-        //std::cout << "Произошла неизвестная ошибка" << std::endl;
+        outputLink->error("Произошла неизвестная ошибка", "");
+        return {{"success", 1}};
     }
+}
 
+int8_t connection::addOutput(output* outputI){
+    outputLink = outputI;
     return 0;
 }

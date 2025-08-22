@@ -6,12 +6,14 @@ int main(){
 
     connection connection;
     output output(&connection);
+    
+    connection.addOutput(&output);
 
     while (1){
         try{
             output.menu();
         }catch(...){
-            //std::cout << "произошла неизвестная ошибка" << std::endl;
+            output.error("Произошла неизвестная ошибка","");
         }
     }
     

@@ -10,6 +10,8 @@ using boost::asio::ip::tcp;
 using json = nlohmann::json;
 namespace asio = boost::asio;
 
+class output;
+
 class connection{
 private:
     boost::system::error_code error;
@@ -17,12 +19,14 @@ private:
     const asio::ip::address serverIp = asio::ip::make_address("127.0.0.1");
     const int serverPort = 12345;
     tcp::endpoint endpoint;
+    output* outputLink;
 
 public:
     connection();
     std::string send(std::string data);
-    int sendMessage(std::string message);
+    int8_t sendMessage(std::string message);
     json get();
+    int8_t addOutput(output* outputI);
 };
 
 #endif
